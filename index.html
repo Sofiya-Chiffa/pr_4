@@ -125,9 +125,12 @@
 					const referenceSpace = renderer.xr.getReferenceSpace();
 					const session = renderer.xr.getSession();
 
+					let localFloorSpace = null;
+
 					if ( hitTestSourceRequested === false ) {
 
-						session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+						session.requestReferenceSpace( 'local-floor' ).then( function ( referenceSpace ) {
+        					localFloorSpace = referenceSpace;
 
 							session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
 
@@ -149,7 +152,8 @@
 					}
 
 					if ( hitTestSource ) {
-
+						
+						const referenceSpace = localFloorSpace || renderer.xr.getReferenceSpace();
 						const hitTestResults = frame.getHitTestResults( hitTestSource );
 
 						if ( hitTestResults.length ) {
