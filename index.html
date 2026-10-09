@@ -4,10 +4,6 @@
 		<title>three.js ar - hit test</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-		<meta property="og:title" content="three.js ar - hit test">
-		<meta property="og:type" content="website">
-		<meta property="og:url" content="https://threejs.org/examples/webxr_ar_hittest.html">
-		<meta property="og:image" content="https://threejs.org/examples/screenshots/webxr_ar_hittest.jpg">
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
 	<body>
@@ -21,7 +17,7 @@
 				"imports": {
 					"three": "./three.module.js",
 					"three/addons/webxr/ARButton.js": "./ARButton.js",
-    				"three/addons/loaders/GLTFLoader.js": "./GLTFLoader.js"
+					"three/addons/loaders/GLTFLoader.js": "./GLTFLoader.js"
 				}
 			}
 		</script>
@@ -40,34 +36,12 @@
 
 			let hitTestSource = null;
 			let hitTestSourceRequested = false;
-			
+
 			let plantModel = null;
 
-			init(
-				const loader = new GLTFLoader();
-				loader.load(
-				    'plant.glb',
-				    function ( gltf ) {
-				        plantModel = gltf.scene;
-					    const box = new THREE.Box3().setFromObject( plantModel );
-					    const size = new THREE.Vector3();
-					    box.getCenter( size );
-					    plantModel.position.x -= size.x;
-					    plantModel.position.z -= size.z;
-					    plantModel.position.y -= box.min.y;
-				        } );
-				        console.log( 'plant.glb загружен' );
-				    },
-				    undefined,
-				    function ( error ) {
-				        console.error( 'Ошибка загрузки plant.glb:', error );
-				    }
-				);
-				
-			);
+			init();
 
 			function init() {
-				
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
@@ -95,13 +69,45 @@
 
 				//
 
+				const loader = new GLTFLoader();
+				loader.load(
+					'plant.glb',
+					function ( gltf ) {
+
+						plantModel = gltf.scene;
+
+						const box = new THREE.Box3().setFromObject( plantModel );
+						const center = new THREE.Vector3();
+						box.getCenter( center );
+						plantModel.position.x -= center.x;
+						plantModel.position.z -= center.z;
+						plantModel.position.y -= box.min.y;
+
+						console.log( 'plant.glb загружен' );
+
+					},
+					undefined,
+					function ( error ) {
+
+						console.error( 'Ошибка загрузки plant.glb:', error );
+
+					}
+				);
+
+				//
+
 				function onSelect() {
 
-    				if ( reticle.visible === false || plantModel === null ) return;
-    				const model = plantModel.clone( true );
-    				reticle.matrix.decompose( model.position, model.quaternion, model.scale );
-    				model.scale.setScalar( 0.2 );
-   					scene.add( model );
+					if ( reticle.visible === false || plantModel === null ) return;
+
+					const model = plantModel.clone( true );
+
+					reticle.matrix.decompose( model.position, model.quaternion, model.scale );
+
+					model.scale.setScalar( 0.2 );
+
+					scene.add( model );
+
 				}
 
 				controller1 = renderer.xr.getController( 0 );
@@ -114,7 +120,7 @@
 
 				reticle = new THREE.Mesh(
 					new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
-					new THREE.MeshBasicMaterial()
+					new THREE.MeshBasicMaterial( { color: 0x00ff88, side: THREE.DoubleSide } )
 				);
 				reticle.matrixAutoUpdate = false;
 				reticle.visible = false;
