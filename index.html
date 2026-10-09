@@ -127,7 +127,7 @@
 
 					if ( hitTestSourceRequested === false ) {
 
-						session.requestReferenceSpace( 'local-floor' ).then( function ( referenceSpace ) {
+						session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
 
 							session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
 
@@ -149,7 +149,7 @@
 					}
 
 					if ( hitTestSource ) {
-						
+
 						const hitTestResults = frame.getHitTestResults( hitTestSource );
 
 						if ( hitTestResults.length ) {
