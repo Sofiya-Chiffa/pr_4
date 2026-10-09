@@ -20,7 +20,8 @@
 			{
 				"imports": {
 					"three": "./three.module.js",
-					"three/addons/webxr/ARButton.js": "./ARButton.js"
+					"three/addons/webxr/ARButton.js": "./ARButton.js",
+    				"three/addons/loaders/GLTFLoader.js": "./GLTFLoader.js"
 				}
 			}
 		</script>
@@ -29,6 +30,7 @@
 
 			import * as THREE from 'three';
 			import { ARButton } from 'three/addons/webxr/ARButton.js';
+			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 			let container;
 			let camera, scene, renderer;
@@ -38,10 +40,34 @@
 
 			let hitTestSource = null;
 			let hitTestSourceRequested = false;
+			
+			let plantModel = null;
 
-			init();
+			init(
+				const loader = new GLTFLoader();
+				loader.load(
+				    'plant.glb',
+				    function ( gltf ) {
+				        plantModel = gltf.scene;
+					    const box = new THREE.Box3().setFromObject( plantModel );
+					    const size = new THREE.Vector3();
+					    box.getCenter( size );
+					    plantModel.position.x -= size.x;
+					    plantModel.position.z -= size.z;
+					    plantModel.position.y -= box.min.y;
+				        } );
+				        console.log( 'plant.glb загружен' );
+				    },
+				    undefined,
+				    function ( error ) {
+				        console.error( 'Ошибка загрузки plant.glb:', error );
+				    }
+				);
+				
+			);
 
 			function init() {
+				
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
@@ -69,20 +95,13 @@
 
 				//
 
-				const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
-
 				function onSelect() {
 
-					if ( reticle.visible ) {
-
-						const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-						const mesh = new THREE.Mesh( geometry, material );
-						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
-						mesh.scale.y = Math.random() * 2 + 1;
-						scene.add( mesh );
-
-					}
-
+    				if ( reticle.visible === false || plantModel === null ) return;
+    				const model = plantModel.clone( true );
+    				reticle.matrix.decompose( model.position, model.quaternion, model.scale );
+    				model.scale.setScalar( 0.2 );
+   					scene.add( model );
 				}
 
 				controller1 = renderer.xr.getController( 0 );
