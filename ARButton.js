@@ -69,7 +69,7 @@ class ARButton {
 
 				session.addEventListener( 'end', onSessionEnded );
 
-				renderer.xr.setReferenceSpaceType( 'local' );
+				renderer.xr.setReferenceSpaceType( 'local-floor' );
 
 				await renderer.xr.setSession( session );
 
