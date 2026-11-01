@@ -1,6 +1,6 @@
 export class UIManager {
 
-	constructor( oobjectManager, renderer ) {
+	constructor( objectManager, renderer ) {
 
 		this.objectManager = objectManager;
 		this.renderer = renderer;
