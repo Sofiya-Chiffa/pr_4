@@ -8,21 +8,22 @@ export class UIManager {
 		const panel = document.createElement( 'div' );
 		panel.id = 'ui-panel';
 		panel.innerHTML = `
-		    <label>Цвет:
-		        <input type="color" id="ui-color" value="#ff8844">
-		    </label>
-		    <button id="ui-rot-l">↺</button>
-		    <button id="ui-rot-r">↻</button>
-		    <button id="ui-scale-up">+</button>
-		    <button id="ui-scale-down">−</button>
-		    <button id="ui-remove">Удалить</button>
-		    <button id="ui-exit">Выйти</button>
+			<label>Цвет:
+				<input type="color" id="ui-color" value="#ff8844">
+			</label>
+			<button id="ui-rot-l">↺</button>
+			<button id="ui-rot-r">↻</button>
+			<button id="ui-scale-up">+</button>
+			<button id="ui-scale-down">−</button>
+			<button id="ui-remove">Удалить</button>
+			<button id="ui-exit">Выйти</button>
 		`;
+
 		const overlay = document.getElementById( 'ar-overlay' );
 		if ( overlay ) {
-		    overlay.appendChild( panel );
+			overlay.appendChild( panel );
 		} else {
-		    document.body.appendChild( panel );
+			document.body.appendChild( panel );
 		}
 
 		panel.querySelector( '#ui-color' ).addEventListener( 'input', ( e ) => {
@@ -50,8 +51,8 @@ export class UIManager {
 		} );
 
 		panel.querySelector( '#ui-exit' ).addEventListener( 'click', () => {
-		    const session = rendererRef.xr.getSession();
-		    if ( session ) session.end();
+			const session = this.renderer.xr.getSession();
+			if ( session ) session.end();
 		} );
 
 	}
