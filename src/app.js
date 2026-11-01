@@ -13,7 +13,7 @@ async function main() {
 	const loader = new ModelLoader();
 	const hitTest = new HitTestController( ar.scene, ar.renderer );
 	const objects = new ObjectManager( ar.scene );
-	const ui = new UIManager( objects );
+	const ui = new UIManager( objects, ar.renderer );
 
 	try {
 		const hdr = await loader.loadHDR( 'environment.hdr' );
