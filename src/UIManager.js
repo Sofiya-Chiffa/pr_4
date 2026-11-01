@@ -1,60 +1,68 @@
 export class UIManager {
 
-	constructor( objectManager, renderer ) {
+    constructor( objectManager, renderer ) {
 
-		this.objectManager = objectManager;
-		this.renderer = renderer;
+        this.objectManager = objectManager;
+        this.renderer = renderer;
 
-		const panel = document.createElement( 'div' );
-		panel.id = 'ui-panel';
-		panel.innerHTML = `
-			<label>Цвет:
-				<input type="color" id="ui-color" value="#ff8844">
-			</label>
-			<button id="ui-rot-l">↺</button>
-			<button id="ui-rot-r">↻</button>
-			<button id="ui-scale-up">+</button>
-			<button id="ui-scale-down">−</button>
-			<button id="ui-remove">Удалить</button>
-			<button id="ui-exit">Выйти</button>
-		`;
+        this._uiPointerActive = false;
 
-		const overlay = document.getElementById( 'ar-overlay' );
-		if ( overlay ) {
-			overlay.appendChild( panel );
-		} else {
-			document.body.appendChild( panel );
-		}
+        const panel = document.createElement( 'div' );
+        panel.id = 'ui-panel';
+        panel.innerHTML = `
+            <label>Цвет:
+                <input type="color" id="ui-color" value="#ff8844">
+            </label>
+            <button id="ui-rot-l">↺</button>
+            <button id="ui-rot-r">↻</button>
+            <button id="ui-scale-up">+</button>
+            <button id="ui-scale-down">−</button>
+            <button id="ui-remove">Удалить</button>
+            <button id="ui-exit">Выйти</button>
+        `;
 
-		panel.querySelector( '#ui-color' ).addEventListener( 'input', ( e ) => {
-			this.objectManager.setSelectedColor( e.target.value );
-		} );
+        const overlay = document.getElementById( 'ar-overlay' );
+        ( overlay || document.body ).appendChild( panel );
 
-		panel.querySelector( '#ui-rot-l' ).addEventListener( 'click', () => {
-			this.objectManager.rotateSelected( - Math.PI / 8 );
-		} );
+        panel.addEventListener( 'pointerdown', ( e ) => {
+            this._uiPointerActive = true;
+            e.stopPropagation();
+        }, true );
 
-		panel.querySelector( '#ui-rot-r' ).addEventListener( 'click', () => {
-			this.objectManager.rotateSelected( Math.PI / 8 );
-		} );
+        panel.addEventListener( 'pointerup', ( e ) => {
+            e.stopPropagation();
+            setTimeout( () => { this._uiPointerActive = false; }, 300 );
+        }, true );
 
-		panel.querySelector( '#ui-scale-up' ).addEventListener( 'click', () => {
-			this.objectManager.scaleSelected( 1.2 );
-		} );
+        panel.addEventListener( 'click', ( e ) => e.stopPropagation() );
 
-		panel.querySelector( '#ui-scale-down' ).addEventListener( 'click', () => {
-			this.objectManager.scaleSelected( 0.8 );
-		} );
+        panel.querySelector( '#ui-color' ).addEventListener( 'input', ( e ) => {
+            this.objectManager.setSelectedColor( e.target.value );
+        } );
+        panel.querySelector( '#ui-rot-l' ).addEventListener( 'click', () => {
+            this.objectManager.rotateSelected( - Math.PI / 8 );
+        } );
+        panel.querySelector( '#ui-rot-r' ).addEventListener( 'click', () => {
+            this.objectManager.rotateSelected( Math.PI / 8 );
+        } );
+        panel.querySelector( '#ui-scale-up' ).addEventListener( 'click', () => {
+            this.objectManager.scaleSelected( 1.2 );
+        } );
+        panel.querySelector( '#ui-scale-down' ).addEventListener( 'click', () => {
+            this.objectManager.scaleSelected( 0.8 );
+        } );
+        panel.querySelector( '#ui-remove' ).addEventListener( 'click', () => {
+            this.objectManager.removeSelected();
+        } );
+        panel.querySelector( '#ui-exit' ).addEventListener( 'click', () => {
+            const session = this.renderer.xr.getSession();
+            if ( session ) session.end();
+        } );
 
-		panel.querySelector( '#ui-remove' ).addEventListener( 'click', () => {
-			this.objectManager.removeSelected();
-		} );
+    }
 
-		panel.querySelector( '#ui-exit' ).addEventListener( 'click', () => {
-			const session = this.renderer.xr.getSession();
-			if ( session ) session.end();
-		} );
-
-	}
+    isPointerOnUI() {
+        return this._uiPointerActive;
+    }
 
 }
