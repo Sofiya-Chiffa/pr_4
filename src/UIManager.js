@@ -16,7 +16,12 @@ export class UIManager {
 			<button id="ui-scale-down">−</button>
 			<button id="ui-remove">Удалить</button>
 		`;
-		document.body.appendChild( panel );
+		const overlay = document.getElementById( 'ar-overlay' );
+		if ( overlay ) {
+		    overlay.appendChild( panel );
+		} else {
+		    document.body.appendChild( panel );
+		}
 
 		panel.querySelector( '#ui-color' ).addEventListener( 'input', ( e ) => {
 			this.objectManager.setSelectedColor( e.target.value );
