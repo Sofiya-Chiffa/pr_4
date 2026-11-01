@@ -1,20 +1,22 @@
 export class UIManager {
 
-	constructor( objectManager ) {
+	constructor( oobjectManager, renderer ) {
 
 		this.objectManager = objectManager;
+		this.renderer = renderer;
 
 		const panel = document.createElement( 'div' );
 		panel.id = 'ui-panel';
 		panel.innerHTML = `
-			<label>Цвет:
-				<input type="color" id="ui-color" value="#ff8844">
-			</label>
-			<button id="ui-rot-l">↺</button>
-			<button id="ui-rot-r">↻</button>
-			<button id="ui-scale-up">+</button>
-			<button id="ui-scale-down">−</button>
-			<button id="ui-remove">Удалить</button>
+		    <label>Цвет:
+		        <input type="color" id="ui-color" value="#ff8844">
+		    </label>
+		    <button id="ui-rot-l">↺</button>
+		    <button id="ui-rot-r">↻</button>
+		    <button id="ui-scale-up">+</button>
+		    <button id="ui-scale-down">−</button>
+		    <button id="ui-remove">Удалить</button>
+		    <button id="ui-exit">Выйти</button>
 		`;
 		const overlay = document.getElementById( 'ar-overlay' );
 		if ( overlay ) {
@@ -45,6 +47,11 @@ export class UIManager {
 
 		panel.querySelector( '#ui-remove' ).addEventListener( 'click', () => {
 			this.objectManager.removeSelected();
+		} );
+
+		panel.querySelector( '#ui-exit' ).addEventListener( 'click', () => {
+		    const session = rendererRef.xr.getSession();
+		    if ( session ) session.end();
 		} );
 
 	}
