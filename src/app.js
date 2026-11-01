@@ -40,8 +40,9 @@ async function main() {
 	);
 
 	const onSelect = () => {
-		const matrix = hitTest.getPlacementMatrix();
-		if ( matrix ) objects.place( matrix );
+	    if ( ui.isPointerOnUI() ) return;
+	    const matrix = hitTest.getPlacementMatrix();
+	    if ( matrix ) objects.place( matrix );
 	};
 
 	[ 0, 1 ].forEach( ( i ) => {
