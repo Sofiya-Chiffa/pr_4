@@ -29,8 +29,14 @@ async function main() {
 		console.error( 'plant.glb не загрузился', e );
 	}
 
+	const overlayRoot = document.getElementById( 'ar-overlay' );
+
 	document.body.appendChild(
-		ARButton.createButton( ar.renderer, { requiredFeatures: [ 'hit-test' ] } )
+	    ARButton.createButton( ar.renderer, {
+	        requiredFeatures: [ 'hit-test' ],
+	        optionalFeatures: [ 'dom-overlay' ],
+	        domOverlay: { root: overlayRoot }
+	    } )
 	);
 
 	const onSelect = () => {
