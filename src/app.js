@@ -16,7 +16,7 @@ async function main() {
 	const ui = new UIManager( objects, ar.renderer );
 
 	try {
-		const hdr = await loader.loadHDR( 'environment.hdr' );
+		const hdr = await loader.loadHDR( 'qwantani_dusk_2_puresky_4k.hdr' );
 		ar.setEnvironment( hdr );
 	} catch ( e ) {
 		console.warn( 'HDR не загрузился, используем только HemisphereLight', e );
